@@ -6,7 +6,7 @@ require (
 	github.com/appleboy/graceful v1.1.1
 	github.com/caitlinelfring/go-env-default v1.1.0
 	github.com/swaggest/openapi-go v0.2.53
-	github.com/ukasyah-dev/common v0.0.11
+	github.com/ukasyah-dev/common v0.0.12
 	github.com/ukasyah-dev/identity-service v0.0.0-20240716104712-bfbb26eb7a99
 	gorm.io/gorm v1.25.11
 )
