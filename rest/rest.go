@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/swaggest/openapi-go/openapi31"
+	"github.com/ukasyah-dev/authority-service/controller/invitation"
 	"github.com/ukasyah-dev/authority-service/controller/team"
 	commonAuth "github.com/ukasyah-dev/common/auth"
 	"github.com/ukasyah-dev/common/rest/handler"
@@ -72,4 +73,13 @@ func init() {
 		Tags:         []string{"Team"},
 		Authenticate: true,
 	})
+
+	// Invitation
+	handler.Add(Server, http.MethodPost, "/teams/:teamId/invitations", invitation.CreateInvitation, handler.Config{
+		Summary:      "Create invitation",
+		Description:  "Create invitation",
+		Tags:         []string{"Invitation"},
+		Authenticate: true,
+	})
+
 }
