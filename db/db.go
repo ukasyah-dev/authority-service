@@ -3,6 +3,7 @@ package db
 import (
 	"os"
 
+	"github.com/ukasyah-dev/authority-service/model"
 	"github.com/ukasyah-dev/common/db/pool"
 	identityModel "github.com/ukasyah-dev/identity-service/model"
 	"gorm.io/gorm"
@@ -20,6 +21,7 @@ func Open() {
 
 	err = DB.AutoMigrate(
 		&identityModel.User{},
+		&model.Team{},
 	)
 	if err != nil {
 		panic(err)

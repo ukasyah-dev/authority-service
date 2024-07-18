@@ -1,9 +1,11 @@
 package rest
 
 import (
+	"net/http"
 	"os"
 
 	"github.com/swaggest/openapi-go/openapi31"
+	"github.com/ukasyah-dev/authority-service/controller/team"
 	commonAuth "github.com/ukasyah-dev/common/auth"
 	"github.com/ukasyah-dev/common/rest/handler"
 	"github.com/ukasyah-dev/common/rest/server"
@@ -38,4 +40,36 @@ func init() {
 	})
 
 	handler.AddHealthCheck(Server)
+
+	// Team
+	handler.Add(Server, http.MethodPost, "/teams", team.CreateTeam, handler.Config{
+		Summary:      "Create team",
+		Description:  "Create team",
+		Tags:         []string{"Team"},
+		Authenticate: true,
+	})
+	handler.Add(Server, http.MethodGet, "/teams", team.GetTeams, handler.Config{
+		Summary:      "Get teams",
+		Description:  "Get teams",
+		Tags:         []string{"Team"},
+		Authenticate: true,
+	})
+	handler.Add(Server, http.MethodGet, "/teams/:teamId", team.GetTeam, handler.Config{
+		Summary:      "Get team",
+		Description:  "Get team",
+		Tags:         []string{"Team"},
+		Authenticate: true,
+	})
+	handler.Add(Server, http.MethodPatch, "/teams/:teamId", team.UpdateTeam, handler.Config{
+		Summary:      "Update team",
+		Description:  "Update team",
+		Tags:         []string{"Team"},
+		Authenticate: true,
+	})
+	handler.Add(Server, http.MethodDelete, "/teams/:teamId", team.DeleteTeam, handler.Config{
+		Summary:      "Delete team",
+		Description:  "Delete team",
+		Tags:         []string{"Team"},
+		Authenticate: true,
+	})
 }
