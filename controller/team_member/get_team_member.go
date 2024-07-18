@@ -20,12 +20,9 @@ func GetTeamMember(ctx context.Context, req *model.GetTeamMemberRequest) (*model
 	tm := new(model.TeamMember)
 
 	err := db.DB.WithContext(ctx).
-		Where(&model.TeamMember{
-			TeamID: req.TeamID,
-			UserID: req.UserID,
-		}).
+		Where("team_id = ?", req.TeamID).
+		Where("user_id = ?", req.UserID).
 		Take(tm).Error
-
 	if err != nil {
 		if e.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.NotFound()

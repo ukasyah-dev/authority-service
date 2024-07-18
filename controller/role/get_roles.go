@@ -14,6 +14,8 @@ func GetRoles(ctx context.Context, req *model.GetRolesRequest) (*model.GetRolesR
 		return nil, err
 	}
 
+	req.PaginationRequest.Keys = []string{"Name"}
+
 	tx := db.DB.WithContext(ctx).Model(&model.Role{})
 
 	data, pagination, err := paginator.Paginate[model.Role](tx, &req.PaginationRequest)

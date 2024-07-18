@@ -12,28 +12,24 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetRole(ctx context.Context, req *model.GetTeamMemberRequest) (*model.TeamMember, error) {
+func GetRole(ctx context.Context, req *model.GetRoleRequest) (*model.Role, error) {
 	if err := validator.Validate(req); err != nil {
 		return nil, err
 	}
 
-	tm := new(model.TeamMember)
+	role := new(model.Role)
 
 	err := db.DB.WithContext(ctx).
-		Where(&model.TeamMember{
-			TeamID: req.TeamID,
-			UserID: req.UserID,
-		}).
-		Take(tm).Error
-
+		Where("id = ?", req.ID).
+		Take(role).Error
 	if err != nil {
 		if e.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.NotFound()
 		}
 
-		log.Errorf("Failed to get team member: %s", err)
+		log.Errorf("Failed to get role: %s", err)
 		return nil, errors.Internal()
 	}
 
-	return tm, nil
+	return role, nil
 }

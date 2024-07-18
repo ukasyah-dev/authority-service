@@ -6,6 +6,7 @@ import (
 
 	"github.com/swaggest/openapi-go/openapi31"
 	"github.com/ukasyah-dev/authority-service/controller/invitation"
+	"github.com/ukasyah-dev/authority-service/controller/role"
 	"github.com/ukasyah-dev/authority-service/controller/team"
 	commonAuth "github.com/ukasyah-dev/common/auth"
 	"github.com/ukasyah-dev/common/rest/handler"
@@ -41,6 +42,38 @@ func init() {
 	})
 
 	handler.AddHealthCheck(Server)
+
+	// Role
+	handler.Add(Server, http.MethodPost, "/roles", role.CreateRole, handler.Config{
+		Summary:     "Create role",
+		Description: "Create role",
+		Tags:        []string{"Role"},
+		SuperAdmin:  true,
+	})
+	handler.Add(Server, http.MethodGet, "/roles", role.GetRoles, handler.Config{
+		Summary:      "Get roles",
+		Description:  "Get roles",
+		Tags:         []string{"Role"},
+		Authenticate: true,
+	})
+	handler.Add(Server, http.MethodGet, "/roles/:roleId", role.GetRole, handler.Config{
+		Summary:      "Get role",
+		Description:  "Get role",
+		Tags:         []string{"Role"},
+		Authenticate: true,
+	})
+	handler.Add(Server, http.MethodPatch, "/roles/:roleId", role.UpdateRole, handler.Config{
+		Summary:     "Update role",
+		Description: "Update role",
+		Tags:        []string{"Role"},
+		SuperAdmin:  true,
+	})
+	handler.Add(Server, http.MethodDelete, "/roles/:roleId", role.DeleteRole, handler.Config{
+		Summary:     "Delete role",
+		Description: "Delete role",
+		Tags:        []string{"Role"},
+		SuperAdmin:  true,
+	})
 
 	// Team
 	handler.Add(Server, http.MethodPost, "/teams", team.CreateTeam, handler.Config{
