@@ -1,4 +1,4 @@
-package team_test
+package team_member_test
 
 import (
 	"os"

@@ -1,4 +1,4 @@
-package team_test
+package role_test
 
 import (
 	"net/http"
@@ -9,9 +9,9 @@ import (
 	"github.com/ukasyah-dev/common/rest/testkit"
 )
 
-func TestGetTeams_Success(t *testing.T) {
+func TestGetRoles_Success(t *testing.T) {
 	testkit.New(tests.RESTServer).
-		Get("/teams").
+		Get("/roles").
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[1]).
 		Expect(t).
 		Status(http.StatusOK).

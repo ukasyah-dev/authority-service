@@ -1,4 +1,4 @@
-package team_test
+package action_test
 
 import (
 	"net/http"
@@ -11,30 +11,30 @@ import (
 	"github.com/ukasyah-dev/common/rest/testkit"
 )
 
-func TestUpdateTeam_Success(t *testing.T) {
+func TestUpdateAction_Success(t *testing.T) {
 	data := map[string]any{
 		"name": faker.Name(),
 	}
 
 	testkit.New(tests.RESTServer).
-		Patch("/teams/"+tests.Data.Teams[0].ID).
+		Patch("/actions/"+tests.Data.Actions[0].ID).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[0]).
 		JSON(data).
 		Expect(t).
 		Status(http.StatusOK).
-		Assert(jsonpath.Equal("$.id", tests.Data.Teams[0].ID)).
+		Assert(jsonpath.Equal("$.id", tests.Data.Actions[0].ID)).
 		Assert(jsonpath.Equal("$.name", data["name"])).
 		End()
 }
 
-func TestUpdateTeam_PermissionDenied(t *testing.T) {
+func TestUpdateAction_NotFound(t *testing.T) {
 	testkit.New(tests.RESTServer).
-		Patch("/teams/"+id.New()).
+		Patch("/actions/"+id.New()).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[0]).
 		JSON(map[string]any{
 			"name": faker.Name(),
 		}).
 		Expect(t).
-		Status(http.StatusForbidden).
+		Status(http.StatusNotFound).
 		End()
 }

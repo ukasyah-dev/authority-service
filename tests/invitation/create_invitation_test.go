@@ -1,4 +1,4 @@
-package team_test
+package invitation_test
 
 import (
 	"net/http"
@@ -10,12 +10,14 @@ import (
 	"github.com/ukasyah-dev/common/rest/testkit"
 )
 
-func TestCreateTeam_Success(t *testing.T) {
+func TestCreateInvitation_Success(t *testing.T) {
 	testkit.New(tests.RESTServer).
-		Post("/teams").
+		Post("/teams/"+tests.Data.Teams[0].ID+"/invitations").
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[0]).
 		JSON(map[string]any{
-			"name": faker.Name(),
+			"email":  faker.Email(),
+			"roleId": tests.Data.Roles[0].ID,
+			"teamId": tests.Data.Teams[0].ID,
 		}).
 		Expect(t).
 		Status(http.StatusOK).

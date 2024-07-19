@@ -1,4 +1,4 @@
-package team_test
+package role_test
 
 import (
 	"net/http"
@@ -10,15 +10,18 @@ import (
 	"github.com/ukasyah-dev/common/rest/testkit"
 )
 
-func TestCreateTeam_Success(t *testing.T) {
+func TestUpdateRole_Success(t *testing.T) {
+	data := map[string]any{
+		"name": faker.Name(),
+	}
+
 	testkit.New(tests.RESTServer).
-		Post("/teams").
+		Patch("/roles/"+tests.Data.Roles[0].ID).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[0]).
-		JSON(map[string]any{
-			"name": faker.Name(),
-		}).
+		JSON(data).
 		Expect(t).
 		Status(http.StatusOK).
-		Assert(jsonpath.Present("$.id")).
+		Assert(jsonpath.Equal("$.id", tests.Data.Roles[0].ID)).
+		Assert(jsonpath.Equal("$.name", data["name"])).
 		End()
 }

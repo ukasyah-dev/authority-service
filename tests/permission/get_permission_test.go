@@ -1,4 +1,4 @@
-package team_test
+package permission_test
 
 import (
 	"net/http"
@@ -9,13 +9,12 @@ import (
 	"github.com/ukasyah-dev/common/rest/testkit"
 )
 
-func TestGetTeam_Success(t *testing.T) {
+func TestGetPermission_Success(t *testing.T) {
 	testkit.New(tests.RESTServer).
-		Get("/teams/"+tests.Data.Teams[2].ID).
+		Get("/permissions/"+tests.Data.Permissions[2].ID).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[2]).
 		Expect(t).
 		Status(http.StatusOK).
-		Assert(jsonpath.Equal("$.id", tests.Data.Teams[2].ID)).
-		Assert(jsonpath.Equal("$.name", tests.Data.Teams[2].Name)).
+		Assert(jsonpath.Equal("$.id", tests.Data.Permissions[2].ID)).
 		End()
 }

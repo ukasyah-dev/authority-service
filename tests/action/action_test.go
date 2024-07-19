@@ -1,4 +1,4 @@
-package team_test
+package action_test
 
 import (
 	"os"
@@ -10,6 +10,5 @@ import (
 func TestMain(m *testing.M) {
 	tests.Setup()
 	defer tests.Teardown()
-	code := m.Run()
-	os.Exit(code)
+	os.Exit(m.Run())
 }
