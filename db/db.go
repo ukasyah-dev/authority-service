@@ -24,6 +24,7 @@ func Open() {
 		&model.Role{},
 		&model.Permission{},
 		&model.Team{},
+		&model.Invitation{},
 		&model.TeamMember{},
 		&identityModel.User{},
 	)

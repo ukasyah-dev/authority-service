@@ -5,13 +5,12 @@ import (
 	"testing"
 
 	jsonpath "github.com/steinfletcher/apitest-jsonpath"
-	"github.com/ukasyah-dev/authority-service/rest"
 	"github.com/ukasyah-dev/authority-service/tests"
 	"github.com/ukasyah-dev/common/rest/testkit"
 )
 
 func TestGetPermissions_Success(t *testing.T) {
-	testkit.New(rest.Server).
+	testkit.New(tests.RESTServer).
 		Get("/permissions").
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[1]).
 		Expect(t).

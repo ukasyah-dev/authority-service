@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-faker/faker/v4"
 	jsonpath "github.com/steinfletcher/apitest-jsonpath"
-	"github.com/ukasyah-dev/authority-service/rest"
 	"github.com/ukasyah-dev/authority-service/tests"
 	"github.com/ukasyah-dev/common/id"
 	"github.com/ukasyah-dev/common/rest/testkit"
@@ -17,7 +16,7 @@ func TestUpdateAction_Success(t *testing.T) {
 		"name": faker.Name(),
 	}
 
-	testkit.New(rest.Server).
+	testkit.New(tests.RESTServer).
 		Patch("/actions/"+tests.Data.Actions[0].ID).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[0]).
 		JSON(data).
@@ -29,7 +28,7 @@ func TestUpdateAction_Success(t *testing.T) {
 }
 
 func TestUpdateAction_NotFound(t *testing.T) {
-	testkit.New(rest.Server).
+	testkit.New(tests.RESTServer).
 		Patch("/actions/"+id.New()).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[0]).
 		JSON(map[string]any{

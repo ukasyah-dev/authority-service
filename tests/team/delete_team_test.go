@@ -5,13 +5,12 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
-	"github.com/ukasyah-dev/authority-service/rest"
 	"github.com/ukasyah-dev/authority-service/tests"
 	"github.com/ukasyah-dev/common/rest/testkit"
 )
 
 func TestDeleteTeam_Success(t *testing.T) {
-	testkit.New(rest.Server).
+	testkit.New(tests.RESTServer).
 		Delete("/teams/"+tests.Data.Teams[3].ID).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[3]).
 		JSON(map[string]any{

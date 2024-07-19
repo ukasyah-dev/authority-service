@@ -2,8 +2,6 @@ module github.com/ukasyah-dev/authority-service
 
 go 1.22.5
 
-replace github.com/ukasyah-dev/common => ../common
-
 require (
 	github.com/appleboy/graceful v1.1.1
 	github.com/caitlinelfring/go-env-default v1.1.0
@@ -11,8 +9,8 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/steinfletcher/apitest-jsonpath v1.7.2
 	github.com/swaggest/openapi-go v0.2.53
-	github.com/ukasyah-dev/common v0.0.12
-	github.com/ukasyah-dev/identity-service v0.0.0-20240719001052-8425fbcde781
+	github.com/ukasyah-dev/common v0.0.13
+	github.com/ukasyah-dev/identity-service v0.0.1
 	github.com/ukasyah-dev/pb v0.0.0-20240719072450-1acd76e5ed6a
 	google.golang.org/grpc v1.65.0
 	gorm.io/gorm v1.25.11

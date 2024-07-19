@@ -10,6 +10,9 @@ import (
 	"github.com/ukasyah-dev/authority-service/rest"
 	"github.com/ukasyah-dev/common/amqp"
 	identityModel "github.com/ukasyah-dev/identity-service/model"
+	pb "github.com/ukasyah-dev/pb/authority"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var port = env.GetIntDefault("PORT", 3000)
@@ -21,6 +24,16 @@ func init() {
 }
 
 func main() {
+	// Create authority client
+	addr := "localhost:" + env.GetDefault("GRPC_PORT", "4000")
+	authorityClientConn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		panic(err)
+	}
+	authorityClient := pb.NewAuthorityClient(authorityClientConn)
+
+	s := rest.NewServer(authorityClient)
+
 	m := graceful.NewManager()
 
 	m.AddRunningJob(func(ctx context.Context) error {
@@ -28,11 +41,11 @@ func main() {
 	})
 
 	m.AddRunningJob(func(ctx context.Context) error {
-		return rest.Server.Start(port)
+		return s.Start(port)
 	})
 
 	m.AddShutdownJob(func() error {
-		return rest.Server.Shutdown()
+		return s.Shutdown()
 	})
 
 	m.AddShutdownJob(func() error {

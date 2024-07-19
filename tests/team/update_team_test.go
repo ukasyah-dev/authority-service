@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-faker/faker/v4"
 	jsonpath "github.com/steinfletcher/apitest-jsonpath"
-	"github.com/ukasyah-dev/authority-service/rest"
 	"github.com/ukasyah-dev/authority-service/tests"
 	"github.com/ukasyah-dev/common/id"
 	"github.com/ukasyah-dev/common/rest/testkit"
@@ -17,7 +16,7 @@ func TestUpdateTeam_Success(t *testing.T) {
 		"name": faker.Name(),
 	}
 
-	testkit.New(rest.Server).
+	testkit.New(tests.RESTServer).
 		Patch("/teams/"+tests.Data.Teams[0].ID).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[0]).
 		JSON(data).
@@ -28,14 +27,14 @@ func TestUpdateTeam_Success(t *testing.T) {
 		End()
 }
 
-func TestUpdateTeam_NotFound(t *testing.T) {
-	testkit.New(rest.Server).
+func TestUpdateTeam_PermissionDenied(t *testing.T) {
+	testkit.New(tests.RESTServer).
 		Patch("/teams/"+id.New()).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[0]).
 		JSON(map[string]any{
 			"name": faker.Name(),
 		}).
 		Expect(t).
-		Status(http.StatusNotFound).
+		Status(http.StatusForbidden).
 		End()
 }

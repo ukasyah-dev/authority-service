@@ -14,6 +14,7 @@ import (
 	"github.com/ukasyah-dev/authority-service/controller/team_member"
 	"github.com/ukasyah-dev/authority-service/db"
 	"github.com/ukasyah-dev/authority-service/model"
+	"github.com/ukasyah-dev/authority-service/rest"
 	"github.com/ukasyah-dev/authority-service/rpc"
 	"github.com/ukasyah-dev/common/amqp"
 	commonAuth "github.com/ukasyah-dev/common/auth"
@@ -21,6 +22,7 @@ import (
 	gt "github.com/ukasyah-dev/common/grpc/testkit"
 	"github.com/ukasyah-dev/common/hash"
 	"github.com/ukasyah-dev/common/id"
+	restServer "github.com/ukasyah-dev/common/rest/server"
 	identityModel "github.com/ukasyah-dev/identity-service/model"
 	pb "github.com/ukasyah-dev/pb/authority"
 	"google.golang.org/grpc"
@@ -40,10 +42,13 @@ var Data struct {
 	Users        []*identityModel.User
 }
 
+var RESTServer *restServer.Server
+
 func Setup() {
 	faker.SetGenerateUniqueValues(true)
 
 	amqp.Open(os.Getenv("AMQP_URL"))
+	amqp.DeclareQueues("user-mutation")
 	dt.CreateTestDB()
 	db.Open()
 
@@ -52,6 +57,8 @@ func Setup() {
 	pb.RegisterAuthorityServer(grpcServer, &rpc.Server{})
 	authorityClientConn, closeAuthorityClientConn = gt.NewClientConn(grpcServer)
 	AuthorityClient = pb.NewAuthorityClient(authorityClientConn)
+
+	RESTServer = rest.NewServer(AuthorityClient)
 
 	privateKey, err := commonAuth.ParsePrivateKeyFromBase64(os.Getenv("BASE64_JWT_PRIVATE_KEY"))
 	if err != nil {

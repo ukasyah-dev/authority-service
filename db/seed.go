@@ -2,6 +2,7 @@ package db
 
 import (
 	"github.com/ukasyah-dev/authority-service/model"
+	"github.com/ukasyah-dev/common/id"
 	"gorm.io/gorm/clause"
 )
 
@@ -26,10 +27,12 @@ func seed() {
 
 	permissions := []model.Permission{
 		{
+			ID:       id.New(),
 			ActionID: "read-team",
 			RoleID:   "admin",
 		},
 		{
+			ID:       id.New(),
 			ActionID: "write-team",
 			RoleID:   "admin",
 		},
