@@ -6,6 +6,7 @@ import (
 	"github.com/ukasyah-dev/authority-service/db"
 	"github.com/ukasyah-dev/authority-service/model"
 	"github.com/ukasyah-dev/common/errors"
+	"github.com/ukasyah-dev/common/id"
 	"github.com/ukasyah-dev/common/log"
 	"github.com/ukasyah-dev/common/validator"
 )
@@ -16,6 +17,7 @@ func CreateTeamMember(ctx context.Context, req *model.CreateTeamMemberRequest) (
 	}
 
 	tm := &model.TeamMember{
+		ID:     id.New(),
 		RoleID: req.RoleID,
 		TeamID: req.TeamID,
 		UserID: req.UserID,

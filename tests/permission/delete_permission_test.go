@@ -1,4 +1,4 @@
-package role_test
+package permission_test
 
 import (
 	"net/http"
@@ -9,9 +9,9 @@ import (
 	"github.com/ukasyah-dev/common/rest/testkit"
 )
 
-func TestDeleteRole_Success(t *testing.T) {
+func TestDeletePermission_Success(t *testing.T) {
 	testkit.New(rest.Server).
-		Delete("/roles/"+tests.Data.Roles[3].ID).
+		Delete("/permissions/"+tests.Data.Permissions[3].ID).
 		Header("Authorization", "Bearer "+tests.Data.AccessTokens[0]).
 		Expect(t).
 		Status(http.StatusOK).

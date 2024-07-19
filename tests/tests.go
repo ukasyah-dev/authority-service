@@ -14,11 +14,21 @@ import (
 	"github.com/ukasyah-dev/authority-service/controller/team_member"
 	"github.com/ukasyah-dev/authority-service/db"
 	"github.com/ukasyah-dev/authority-service/model"
+	"github.com/ukasyah-dev/authority-service/rpc"
+	"github.com/ukasyah-dev/common/amqp"
 	commonAuth "github.com/ukasyah-dev/common/auth"
+	dt "github.com/ukasyah-dev/common/db/testkit"
+	gt "github.com/ukasyah-dev/common/grpc/testkit"
 	"github.com/ukasyah-dev/common/hash"
 	"github.com/ukasyah-dev/common/id"
 	identityModel "github.com/ukasyah-dev/identity-service/model"
+	pb "github.com/ukasyah-dev/pb/authority"
+	"google.golang.org/grpc"
 )
+
+var AuthorityClient pb.AuthorityClient
+var authorityClientConn *grpc.ClientConn
+var closeAuthorityClientConn func()
 
 var Data struct {
 	AccessTokens []string
@@ -31,6 +41,18 @@ var Data struct {
 }
 
 func Setup() {
+	faker.SetGenerateUniqueValues(true)
+
+	amqp.Open(os.Getenv("AMQP_URL"))
+	dt.CreateTestDB()
+	db.Open()
+
+	// Setup authority client
+	grpcServer := grpc.NewServer()
+	pb.RegisterAuthorityServer(grpcServer, &rpc.Server{})
+	authorityClientConn, closeAuthorityClientConn = gt.NewClientConn(grpcServer)
+	AuthorityClient = pb.NewAuthorityClient(authorityClientConn)
+
 	privateKey, err := commonAuth.ParsePrivateKeyFromBase64(os.Getenv("BASE64_JWT_PRIVATE_KEY"))
 	if err != nil {
 		panic(err)
@@ -98,4 +120,11 @@ func Setup() {
 		})
 		Data.TeamMembers = append(Data.TeamMembers, tm)
 	}
+}
+
+func Teardown() {
+	closeAuthorityClientConn()
+	amqp.Close()
+	db.Close()
+	dt.DestroyTestDB()
 }

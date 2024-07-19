@@ -1,4 +1,4 @@
-package team_test
+package action_test
 
 import (
 	"net/http"
@@ -10,13 +10,13 @@ import (
 	"github.com/ukasyah-dev/common/rest/testkit"
 )
 
-func TestGetTeam_Success(t *testing.T) {
+func TestGetActions_Success(t *testing.T) {
 	testkit.New(rest.Server).
-		Get("/teams/"+tests.Data.Teams[2].ID).
-		Header("Authorization", "Bearer "+tests.Data.AccessTokens[2]).
+		Get("/actions").
+		Header("Authorization", "Bearer "+tests.Data.AccessTokens[1]).
 		Expect(t).
 		Status(http.StatusOK).
-		Assert(jsonpath.Equal("$.id", tests.Data.Teams[2].ID)).
-		Assert(jsonpath.Equal("$.name", tests.Data.Teams[2].Name)).
+		Assert(jsonpath.GreaterThan("$.data", 0)).
+		Assert(jsonpath.Present("$.data[0].id")).
 		End()
 }

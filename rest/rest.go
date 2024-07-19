@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/caitlinelfring/go-env-default"
 	"github.com/swaggest/openapi-go/openapi31"
 	"github.com/ukasyah-dev/authority-service/controller/action"
 	"github.com/ukasyah-dev/authority-service/controller/invitation"
@@ -14,6 +15,9 @@ import (
 	commonAuth "github.com/ukasyah-dev/common/auth"
 	"github.com/ukasyah-dev/common/rest/handler"
 	"github.com/ukasyah-dev/common/rest/server"
+	pb "github.com/ukasyah-dev/pb/authority"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var Server *server.Server
@@ -38,10 +42,19 @@ func init() {
 		panic(err)
 	}
 
+	// Create authority client
+	addr := "localhost:" + env.GetDefault("GRPC_PORT", "4000")
+	authorityClientConn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		panic(err)
+	}
+	authorityClient := pb.NewAuthorityClient(authorityClientConn)
+
 	// Create new server
 	Server = server.New(server.Config{
-		OpenAPI:      server.OpenAPI{Spec: &spec},
-		JWTPublicKey: jwtPublicKey,
+		OpenAPI:         server.OpenAPI{Spec: &spec},
+		JWTPublicKey:    jwtPublicKey,
+		AuthorityClient: authorityClient,
 	})
 
 	handler.AddHealthCheck(Server)

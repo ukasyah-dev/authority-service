@@ -17,6 +17,7 @@ type CreatePermissionRequest struct {
 
 type CheckPermissionRequest struct {
 	ActionID string `json:"actionId" validate:"required"`
+	TeamID   string `json:"teamId" validate:"required"`
 	UserID   string `json:"userId" validate:"required"`
 }
 
