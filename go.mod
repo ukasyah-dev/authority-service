@@ -2,6 +2,8 @@ module github.com/ukasyah-dev/authority-service
 
 go 1.22.5
 
+replace github.com/ukasyah-dev/common => ../common
+
 require (
 	github.com/appleboy/graceful v1.1.1
 	github.com/caitlinelfring/go-env-default v1.1.0
@@ -11,6 +13,8 @@ require (
 	github.com/swaggest/openapi-go v0.2.53
 	github.com/ukasyah-dev/common v0.0.12
 	github.com/ukasyah-dev/identity-service v0.0.0-20240716104712-bfbb26eb7a99
+	google.golang.org/grpc v1.65.0
+	google.golang.org/protobuf v1.34.2
 	gorm.io/gorm v1.25.11
 )
 
@@ -62,6 +66,7 @@ require (
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240528184218-531527333157 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/postgres v1.5.9 // indirect
 )

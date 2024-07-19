@@ -36,17 +36,17 @@ type GetTeamMembersResponse struct {
 }
 
 type GetTeamMemberRequest struct {
-	TeamID string `params:"teamId" path:"teamId" validate:"required"`
-	UserID string `params:"userId" path:"userId" validate:"required"`
+	TeamID       string `params:"teamId" path:"teamId" validate:"required"`
+	TeamMemberID string `params:"teamMemberId" path:"teamMemberId" validate:"required"`
 }
 
 type UpdateTeamMemberRequest struct {
-	TeamID string `params:"teamId" path:"teamId" validate:"required"`
-	UserID string `params:"userId" path:"userId" validate:"required"`
-	RoleID string `json:"roleId" validate:"required"`
+	RoleID       string `json:"roleId" validate:"required"`
+	TeamID       string `params:"teamId" path:"teamId" validate:"required"`
+	TeamMemberID string `params:"teamMemberId" path:"teamMemberId" validate:"required"`
 }
 
 type DeleteTeamMemberRequest struct {
-	TeamID string `params:"teamId" path:"teamId" validate:"required"`
-	UserID string `params:"userId" path:"userId" validate:"required"`
+	TeamID       string `params:"teamId" path:"teamId" validate:"required"`
+	TeamMemberID string `params:"teamMemberId" path:"teamMemberId" validate:"required"`
 }

@@ -5,16 +5,44 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func seed() error {
-	err := DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&[]model.Role{
+func seed() {
+	actions := []model.Action{
+		{
+			ID:   "read-team",
+			Name: "Read team",
+		},
+		{
+			ID:   "write-team",
+			Name: "Write team",
+		},
+	}
+
+	roles := []model.Role{
 		{
 			ID:   "admin",
 			Name: "Admin",
 		},
-	}).Error
-	if err != nil {
-		return err
 	}
 
-	return nil
+	permissions := []model.Permission{
+		{
+			ActionID: "read-team",
+			RoleID:   "admin",
+		},
+		{
+			ActionID: "write-team",
+			RoleID:   "admin",
+		},
+	}
+
+	create(actions)
+	create(roles)
+	create(permissions)
+}
+
+func create(data any) {
+	err := DB.Clauses(clause.OnConflict{DoNothing: true}).Create(data).Error
+	if err != nil {
+		panic(err)
+	}
 }

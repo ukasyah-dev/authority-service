@@ -11,8 +11,8 @@ import (
 
 func UpdateTeamMember(ctx context.Context, req *model.UpdateTeamMemberRequest) (*model.TeamMember, error) {
 	t, err := GetTeamMember(ctx, &model.GetTeamMemberRequest{
-		TeamID: req.TeamID,
-		UserID: req.UserID,
+		TeamID:       req.TeamID,
+		TeamMemberID: req.TeamMemberID,
 	})
 	if err != nil {
 		return nil, err

@@ -7,7 +7,11 @@ import (
 
 	"github.com/go-faker/faker/v4"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/ukasyah-dev/authority-service/controller/action"
+	"github.com/ukasyah-dev/authority-service/controller/permission"
+	"github.com/ukasyah-dev/authority-service/controller/role"
 	"github.com/ukasyah-dev/authority-service/controller/team"
+	"github.com/ukasyah-dev/authority-service/controller/team_member"
 	"github.com/ukasyah-dev/authority-service/db"
 	"github.com/ukasyah-dev/authority-service/model"
 	commonAuth "github.com/ukasyah-dev/common/auth"
@@ -18,7 +22,11 @@ import (
 
 var Data struct {
 	AccessTokens []string
+	Actions      []*model.Action
+	Permissions  []*model.Permission
+	Roles        []*model.Role
 	Teams        []*model.Team
+	TeamMembers  []*model.TeamMember
 	Users        []*identityModel.User
 }
 
@@ -31,8 +39,29 @@ func Setup() {
 	ctx := context.Background()
 
 	for i := 0; i <= 4; i++ {
+		// Actions
+		a, _ := action.CreateAction(ctx, &model.CreateActionRequest{
+			ID:   id.New(),
+			Name: faker.Name(),
+		})
+		Data.Actions = append(Data.Actions, a)
+
+		// Roles
+		r, _ := role.CreateRole(ctx, &model.CreateRoleRequest{
+			ID:   id.New(),
+			Name: faker.Name(),
+		})
+		Data.Roles = append(Data.Roles, r)
+
+		// Permissions
+		p, _ := permission.CreatePermission(ctx, &model.CreatePermissionRequest{
+			ActionID: a.ID,
+			RoleID:   r.ID,
+		})
+		Data.Permissions = append(Data.Permissions, p)
+
 		// Users
-		user := &identityModel.User{
+		u := &identityModel.User{
 			ID:         id.New(),
 			Name:       faker.Name(),
 			Email:      faker.Email(),
@@ -40,15 +69,15 @@ func Setup() {
 			Status:     "active",
 			SuperAdmin: i == 0,
 		}
-		if err := db.DB.Create(user).Error; err != nil {
+		if err := db.DB.Create(u).Error; err != nil {
 			panic(err)
 		}
-		Data.Users = append(Data.Users, user)
+		Data.Users = append(Data.Users, u)
 
 		// Access tokens
 		accessToken, _ := commonAuth.GenerateAccessToken(privateKey, commonAuth.Claims{
-			UserID:     user.ID,
-			SuperAdmin: user.SuperAdmin,
+			UserID:     u.ID,
+			SuperAdmin: u.SuperAdmin,
 			RegisteredClaims: jwt.RegisteredClaims{
 				ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
 			},
@@ -60,5 +89,13 @@ func Setup() {
 			Name: faker.Name(),
 		})
 		Data.Teams = append(Data.Teams, t)
+
+		// Team members
+		tm, _ := team_member.CreateTeamMember(ctx, &model.CreateTeamMemberRequest{
+			RoleID: "admin",
+			TeamID: t.ID,
+			UserID: u.ID,
+		})
+		Data.TeamMembers = append(Data.TeamMembers, tm)
 	}
 }

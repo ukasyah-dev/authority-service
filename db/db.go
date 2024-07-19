@@ -20,7 +20,9 @@ func Open() {
 	}
 
 	err = DB.AutoMigrate(
+		&model.Action{},
 		&model.Role{},
+		&model.Permission{},
 		&model.Team{},
 		&model.TeamMember{},
 		&identityModel.User{},
@@ -29,9 +31,7 @@ func Open() {
 		panic(err)
 	}
 
-	if err := seed(); err != nil {
-		panic(err)
-	}
+	seed()
 }
 
 func Close() error {

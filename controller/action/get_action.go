@@ -1,4 +1,4 @@
-package team_member
+package action
 
 import (
 	"context"
@@ -12,25 +12,24 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetTeamMember(ctx context.Context, req *model.GetTeamMemberRequest) (*model.TeamMember, error) {
+func GetAction(ctx context.Context, req *model.GetActionRequest) (*model.Action, error) {
 	if err := validator.Validate(req); err != nil {
 		return nil, err
 	}
 
-	tm := new(model.TeamMember)
+	action := new(model.Action)
 
 	err := db.DB.WithContext(ctx).
-		Where("team_id = ?", req.TeamID).
-		Where("id = ?", req.TeamMemberID).
-		Take(tm).Error
+		Where("id = ?", req.ID).
+		Take(action).Error
 	if err != nil {
 		if e.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.NotFound()
 		}
 
-		log.Errorf("Failed to get team member: %s", err)
+		log.Errorf("Failed to get action: %s", err)
 		return nil, errors.Internal()
 	}
 
-	return tm, nil
+	return action, nil
 }
